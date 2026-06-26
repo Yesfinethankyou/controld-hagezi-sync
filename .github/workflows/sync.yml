@@ -1,42 +1,43 @@
+# sync.yml
 name: Sync Hagezi to ControlD
 
 on:
-  # Run daily at 03:00 UTC
   schedule:
-    - cron: '0 3 * * *'
-
-  # Allow manual trigger with optional parameters
+    - cron: '0 3 * * *'  # 03:00 UTC daily
   workflow_dispatch:
     inputs:
       profile:
-        description: 'Specific profile to sync (leave empty for all)'
+        description: 'Specific profile to sync'
         required: false
         default: ''
       dry_run:
-        description: 'Dry run (preview only, no changes)'
+        description: 'Dry run'
         required: false
         default: false
         type: boolean
 
 jobs:
   sync:
-    name: Sync DNS Blocklists
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 30
+    
     steps:
-      - name: Checkout repository
+      - name: Random delay
+        if: github.event_name == 'schedule'
+        run: sleep $((RANDOM % 3600))
+
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install deps
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq jq
 
-      - name: Validate configuration exists
+      - name: Validate config
         run: |
           if [[ ! -f config.toml ]]; then
-            echo "ERROR: config.toml not found. Copy config.toml.example to config.toml and commit it."
+            echo "ERROR: config.toml not found"
             exit 1
           fi
 
@@ -48,3 +49,13 @@ jobs:
           [[ -n "${{ github.event.inputs.profile }}" ]] && ARGS+=("--profile" "${{ github.event.inputs.profile }}")
           [[ "${{ github.event.inputs.dry_run }}" == "true" ]] && ARGS+=("--dry-run")
           ./sync-hagezi.sh "${ARGS[@]}"
+
+      - name: Delete logs on success
+        if: success() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs
