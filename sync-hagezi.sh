@@ -315,9 +315,15 @@ add_all_rules() {
         ((batch_num++))
         local current_batch_size=$(( total - added < BATCH_SIZE ? total - added : BATCH_SIZE ))
 
-        local hostnames
+        local hostnames body
         hostnames=$(jq --argjson start "$added" --argjson count "$current_batch_size" '[.rules[$start:$start+$count][].PK]' "$file")
-        local body="{\"do\":${do_val},\"status\":${status_val},\"group\":${group_id},\"hostnames\":${hostnames}}"
+
+        body=$(jq -n \
+            --argjson do_val "$do_val" \
+            --argjson status_val "$status_val" \
+            --argjson group_id "$group_id" \
+            --argjson hostnames "$hostnames" \
+            '{"do":$do_val,"status":$status_val,"group":$group_id,"hostnames":$hostnames}')
 
         api_call_with_retry "POST" "${API_BASE}/profiles/${pid}/rules" "$body" >/dev/null || { log "    ERROR: Batch $batch_num failed"; return 1; }
         ((added += current_batch_size))
@@ -468,7 +474,7 @@ show_last_updated() {
         if [[ "$code" == "200" ]]; then
             date_str=$(jq -r '.[0].commit.committer.date // empty' <<< "$body")
             if [[ -n "$date_str" ]]; then
-                target_epoch=$(date -d "$date_str" +%s 2>/dev/null) || target_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$date_str" +%s 2>/dev/null)
+                target_epoch=$(jq -r --arg date "$date_str" '($date | sub("\\.[0-9]+"; "") | fromdateiso8601)' 2>/dev/null <<< '{}')
                 if [[ -n "$target_epoch" ]]; then
                     seconds_diff=$(( $(date +%s) - target_epoch ))
 
@@ -600,7 +606,14 @@ sync_folder() {
     if [[ -n "$existing_pk" && "$existing_pk" != "null" ]]; then
         backup_file="$TMPDIR/backup_${existing_pk}.json"
         if backup_group_rules "$pid" "$existing_pk" "$backup_file" "$name"; then
-            log "  Backup ready: $backup_file"
+            local backup_count
+            backup_count=$(jq '.rules | length' "$backup_file" 2>/dev/null || echo 0)
+            if [[ "$backup_count" -eq 0 ]]; then
+                log "  WARN: Backup has 0 rules (API read-after-write inconsistency?)"
+                [[ -n "$SUMMARY_FILE" ]] && echo "| $pname | $fname | ⚠️ Backup empty (0 rules) | - |" >> "$SUMMARY_FILE"
+            else
+                log "  Backup ready: $backup_file"
+            fi
         else
             log "  WARN: Backup failed, proceeding without fallback"
             backup_file=""
@@ -767,7 +780,7 @@ main() {
             if [[ "$_code" == "200" ]]; then
                 _date_str=$(jq -r '.[0].commit.committer.date // empty' <<< "$_body")
                 if [[ -n "$_date_str" ]]; then
-                    _target_epoch=$(date -d "$_date_str" +%s 2>/dev/null) || _target_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$_date_str" +%s 2>/dev/null)
+                    _target_epoch=$(jq -r --arg date "$_date_str" '($date | sub("\\.[0-9]+"; "") | fromdateiso8601)' 2>/dev/null <<< '{}')
                     if [[ -n "$_target_epoch" ]]; then
                         _seconds_diff=$(( $(date +%s) - _target_epoch ))
 

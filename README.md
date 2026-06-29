@@ -1,4 +1,4 @@
-# ControlD Hagezi Sync
+# ControlD HaGeZi Sync
 
 [![GitHub stars](https://img.shields.io/github/stars/0x11DFE/controld-hagezi-sync?style=flat-square)](https://github.com/0x11DFE/controld-hagezi-sync/stargazers)
 [![License](https://img.shields.io/github/license/0x11DFE/controld-hagezi-sync?style=flat-square)](https://github.com/0x11DFE/controld-hagezi-sync/blob/main/LICENSE)
@@ -15,22 +15,22 @@ Automatically sync Hagezi DNS blocklists to your ControlD profiles via the Contr
 
 ## Why this one?
 
-| Feature                        | **0x11DFE/controld-hagezi-sync**                  | [keksiqc/ctrld-sync](https://github.com/keksiqc/ctrld-sync) | [italorgama/ctrld-hagezi-sync](https://github.com/italorgama/ctrld-hagezi-sync) | [tupcakes/controld-updater](https://github.com/tupcakes/controld-updater) |
+| Feature | **0x11DFE/controld-hagezi-sync** | [keksiqc/ctrld-sync](https://github.com/keksiqc/ctrld-sync) | [italorgama/ctrld-hagezi-sync](https://github.com/italorgama/ctrld-hagezi-sync) | [tupcakes/controld-updater](https://github.com/tupcakes/controld-updater) |
 |--------------------------------|---------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| **Language**                   | Bash (`curl` + `jq` only)                        | Python 3 + uv                                              | Go (single binary)                                                             | Python + Docker/Podman                                                   |
-| **Config format**              | TOML (with comments)                              | Python list + `.env`                                       | `lists.txt`                                                                    | CLI args (per-run) + Kubernetes CronJob                                  |
-| **Profile targeting**          | By **name** (human-readable)                      | By **ID**                                                  | By **ID**                                                                      | By **ID**                                                                |
-| **Per-profile folder sets**    | :white_check_mark: Yes (different per profile)   | :x: Same folders for all                                   | :x: Same folders for all                                                       | :x: One list per run (single folder)                                    |
-| **Dry-run**                    | :white_check_mark: Yes (`--dry-run`)             | :x: No                                                     | :x: No                                                                         | :x: No                                                                   |
-| **Single-profile sync**        | :white_check_mark: Yes (`--profile`)             | :x: No                                                     | :x: No                                                                         | :white_check_mark: Yes (inherently single-run)                           |
-| **Freshness report**           | :white_check_mark: Yes                            | :x: No                                                     | :x: No                                                                         | :x: No                                                                   |
-| **List discovery**             | :white_check_mark: `--list-hagezi`               | :x: Manual/hardcoded                                       | :white_check_mark: `make list`                                                 | Manual (specify JSON URL)                                                |
-| **Smart triggering**           | Daily + manual                                    | Daily + manual                                             | Every 2h + **change detection**                                                | Daily Kubernetes CronJob (per list)                                      |
-| **Local CLI experience**       | Native Bash script (excellent)                    | Python script                                              | Go binary                                                                      | Python script + Docker container                                         |
-| **Setup simplicity (Actions)** | Edit TOML + commit + secret                       | Edit Python file + secrets                                 | **Easiest**: Just add secrets (no config commit)                               | CLI args / Kubernetes manifests                                          |
-| **Rule batching**              | 500 rules (with retries)                          | 500 rules (with retries)                                   | 500 rules (with retries)                                                       | Deletes + re-imports (batching assumed)                                  |
-| **Backup/restore fallback**    | :white_check_mark: Automatic                      | :x: No                                                     | :x: No                                                                         | :x: No                                                                   |
-| **GitHub Actions summary**     | :white_check_mark: Markdown table + freshness     | :x: No                                                     | :x: No                                                                         | :x: No                                                                   |
+| **Language** | Bash (`curl` + `jq` only) | Python 3 + uv | Go (single binary) | Python + Docker/Podman |
+| **Config format** | TOML (with comments) | Python list + `.env` | `lists.txt` | CLI args (per-run) + Kubernetes CronJob |
+| **Profile targeting** | By **name** (human-readable) | By **ID** | By **ID** | By **ID** |
+| **Per-profile folder sets** | :white_check_mark: Yes (different per profile) | :x: Same folders for all | :x: Same folders for all | :x: One list per run (single folder) |
+| **Dry-run** | :white_check_mark: Yes (`--dry-run`) | :x: No | :x: No | :x: No |
+| **Single-profile sync** | :white_check_mark: Yes (`--profile`) | :x: No | :x: No | :white_check_mark: Yes (inherently single-run) |
+| **Freshness report** | :white_check_mark: Yes | :x: No | :x: No | :x: No |
+| **List discovery** | :white_check_mark: `--list-hagezi` | :x: Manual/hardcoded | :white_check_mark: `make list` | Manual (specify JSON URL) |
+| **Smart triggering** | Daily + manual | Daily + manual | Every 2h + **change detection** | Daily Kubernetes CronJob (per list) |
+| **Local CLI experience** | Native Bash script (excellent) | Python script | Go binary | Python script + Docker container |
+| **Setup simplicity (Actions)** | Edit TOML + commit + secret | Edit Python file + secrets | **Easiest**: Just add secrets (no config commit) | CLI args / Kubernetes manifests |
+| **Rule batching** | 500 rules (with retries) | 500 rules (with retries) | 500 rules (with retries) | Deletes + re-imports (batching assumed) |
+| **Backup/restore fallback** | :white_check_mark: Automatic | :x: No | :x: No | :x: No |
+| **GitHub Actions summary** | :white_check_mark: Markdown table + freshness | :x: No | :x: No | :x: No |
 
 **Bottom line:** If you want a lightweight, transparent script where you can define *different* blocklists for *different* family members or devices using plain profile names -- and preview changes before they go live -- this is the one.
 
@@ -83,12 +83,12 @@ cd controld-hagezi-sync
 
 # Install dependencies
 # Debian/Ubuntu: sudo apt install curl jq
-# macOS:          brew install curl jq
-# Termux:         pkg install curl jq
+# macOS: brew install curl jq
+# Termux: pkg install curl jq
 
 # Copy and edit config
 cp config.toml.example config.toml
-vim config.toml   # or nano, etc.
+vim config.toml # or nano, etc.
 
 # Set your token (or add it to config.toml [settings])
 export CONTROLD_API_TOKEN="your_token_here"
@@ -123,7 +123,7 @@ All behavior is driven by `config.toml`.
 | `[settings]` | `show_freshness` | Set to `false` to skip the upstream freshness report after sync. Useful in CI to avoid GitHub's unauthenticated rate limit (60 req/hr). |
 | `[profiles]` | `names` | Array of exact ControlD profile names to sync. |
 | `[folders]` | `"Name"` | Maps a friendly folder name to its Hagezi JSON URL. |
-| `[profile_folders]` | `<profile>` | Array of folder names to sync to that profile. |
+| `[profile_folders]` | `` | Array of folder names to sync to that profile. |
 
 ### Example: Adding a new profile
 
@@ -161,13 +161,13 @@ Tesla = ["Badware Hoster", "My Custom List"]
 ```text
 ./sync-hagezi.sh [OPTIONS]
 
-  --config FILE      Use a custom configuration file (default: config.toml)
-  --dry-run          Preview changes without modifying ControlD
-  --profile NAME     Sync only one profile
-  --list-hagezi      List available Hagezi folders (ready for config.toml)
-  --last-updated     Show the last updated date for configured folders and exit
-  --no-freshness     Skip the upstream freshness report at end of sync
-  -h, --help         Show help
+ --config FILE      Use a custom configuration file (default: config.toml)
+ --dry-run          Preview changes without modifying ControlD
+ --profile NAME     Sync only one profile
+ --list-hagezi      List available Hagezi folders (ready for config.toml)
+ --last-updated     Show the last updated date for configured folders and exit
+ --no-freshness     Skip the upstream freshness report at end of sync
+ -h, --help         Show help
 ```
 
 ### Examples
@@ -234,10 +234,11 @@ After the run completes, open the **Summary** tab on the workflow run page to se
 3. Downloads each Hagezi folder JSON once (cached per run).
 4. For each profile, **backs up existing folders** before deletion.
 5. Deletes existing folders by PK, then recreates them with fresh rules.
-6. Rules are inserted in batches of 500 to stay within API limits.
+6. Rules are inserted in batches of 500 using **jq-native JSON construction** for robust, injection-safe payloads.
 7. If rule injection fails, **automatically restores the original folder from backup**.
-8. In GitHub Actions, generates a **markdown summary** on the workflow run page with sync results and upstream freshness
-9. Prints a freshness report showing when each Hagezi list was last updated on GitHub (local CLI only; Actions gets it in the Summary tab)
+8. Freshness timestamps are parsed with **pure jq** (`fromdateiso8601`) — identical behavior on Linux, macOS, and Termux without platform-specific `date` binaries.
+9. In GitHub Actions, generates a **markdown summary** on the workflow run page with sync results and upstream freshness.
+10. Prints a freshness report showing when each Hagezi list was last updated on GitHub (local CLI only; Actions gets it in the Summary tab).
 
 ---
 
@@ -283,8 +284,8 @@ Keep your config simple and these limitations will not affect you.
 | `Profile not found by name` | Ensure the profile name in `config.toml` matches exactly (case-sensitive) in ControlD. |
 | `Failed to fetch profiles (HTTP 401)` | Your API token is invalid or expired. Generate a new one from the ControlD dashboard. |
 | `Batch X failed (HTTP 4xx/5xx)` | The script retries automatically with exponential backoff. If persistent, check ControlD API status. |
-| `--list-hagezi shows rate limit` | GitHub unauthenticated API limit is 60/hr or 5000/hr w/ GITHUB_TOKEN env var. |
-| `Backup OK: 0 rules saved` | ControlD API read-after-write inconsistency on newly created groups. The backup is empty but harmless — the next sync will capture the rules. |
+| `--list-hagezi shows rate limit` | GitHub unauthenticated API limit is 60/hr or 5000/hr w/ `GITHUB_TOKEN` env var. |
+| `WARN: Backup has 0 rules` | ControlD API read-after-write inconsistency on newly created groups. The script logs this explicitly and flags it in the GitHub Actions summary (⚠️). The backup is harmless — the next sync will capture the rules. |
 
 ---
 
