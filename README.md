@@ -1,4 +1,4 @@
-# ControlD HaGeZi Sync
+#  ControlD HaGeZi Sync
 
 [![GitHub stars](https://img.shields.io/github/stars/0x11DFE/controld-hagezi-sync?style=flat-square)](https://github.com/0x11DFE/controld-hagezi-sync/stargazers)
 [![License](https://img.shields.io/github/license/0x11DFE/controld-hagezi-sync?style=flat-square)](https://github.com/0x11DFE/controld-hagezi-sync/blob/main/LICENSE)
@@ -35,7 +35,7 @@ Automatically sync HaGeZi DNS blocklists to your ControlD profiles via the Contr
 | **Zero-cost no-op runs** | ✅ Yes (early exit on unchanged content) | ❌ No (always processes) | ✅ Yes (via release/cache check) | ❌ No |
 | **Hourly update checker** | ✅ Yes (`--check-updates` + cron) | ❌ No (daily workflow) | ✅ Yes (every 2h release check) | ❌ No (manual/cron per container) |
 | **GitHub Actions summary** | ✅ Rich markdown + freshness + rule counts | ⚠️ Basic logs | ⚠️ Good (summary with counts) | ❌ None (workflow exists but minimal) |
-| **Local CLI experience** | ✅ Excellent (many flags, help, discovery) | ⚠️ Good (Python script) | ⚠️ Good (binary + Makefile) | ⚠️ Container/CLI-focused |
+| **Local CLI experience** | ✅ Excellent (many flags, help, discovery) | ⚠️ Good (Python script) | ⚠️ Good (binary + Makefile) | ⚠️ Container/CLI-focused) |
 
 **Bottom line:** If you want a lightweight, transparent script where you can define *different* blocklists for *different* family members or devices using plain profile names -- and preview changes before they go live -- this is the one.
 
@@ -177,7 +177,7 @@ Tesla = ["Badware Hoster", "My Custom List"]
  --profile NAME     Sync only one profile
  --list-hagezi      List available HaGeZi folders (ready for config.toml)
  --last-updated     Show the last updated date for configured folders and exit
- --check-updates    Check if upstream folders changed. Prints HAGEZI_UPDATES_AVAILABLE=true/false.
+ --check-updates    Check if upstream folders changed. Exits 0 if updates available, 1 if not.
  --no-freshness     Skip the upstream freshness report at end of sync
  --no-cache         Ignore persistent cache, always download fresh lists
  -h, --help         Show help
@@ -201,7 +201,7 @@ CONFIG_FILE=prod.toml ./sync-hagezi.sh
 # Check upstream freshness without syncing
 ./sync-hagezi.sh --last-updated
 
-# Check if updates are available (parse stdout for automation)
+# Check if updates are available (exit 0 = yes, exit 1 = no)
 ./sync-hagezi.sh --check-updates
 
 # Skip freshness report (CI-friendly)
@@ -246,14 +246,16 @@ Cache is passed between jobs using distinct keys (`hagezi-content-check-*` → `
 - **Use GitHub Secrets** for the token in CI/CD.
 - The script strips a leading `Bearer ` prefix from the token automatically if present.
 - In GitHub Actions, the token is automatically masked via `::add-mask::` to prevent accidental exposure in logs.
+- **v2.2.0+:** The token is passed to `curl` via a temporary header file instead of the command line, so it no longer appears in `ps` / `proc/*/cmdline` output on shared systems.
 
 ---
 
 ## Requirements
 
-- `bash` 4.3+
+- `bash` 4.0+
 - `curl`
 - `jq`
+- `cmp` (usually provided by `diffutils` or `busybox`)
 
 ---
 
@@ -274,8 +276,8 @@ Cache is passed between jobs using distinct keys (`hagezi-content-check-*` → `
    - Before renaming, checks if a stale `{name}_OLD` group exists from a previous interrupted run
    - Deletes it to prevent name-collision deadlock on resumed runs
 8. **Post-import validation (v2.1.0):**
-   - After import, polls ControlD every second until the group appears with the expected rule count
-   - If the count doesn't match after 30 seconds, the import is considered failed
+   - After import, polls ControlD until the group appears with the expected rule count
+   - If the count doesn't match after a scaled timeout, the import is considered failed
    - Automatically invalidates the persistent cache, re-downloads, and retries once
    - If retry also fails, rolls back to the original group cleanly
 9. **Self-healing validation (v2.1.1):**
@@ -288,10 +290,27 @@ Cache is passed between jobs using distinct keys (`hagezi-content-check-*` → `
 11. **State consistency (v2.1.2):**
     - After every `sync_folder` call (success or failure), the profile's group state is refreshed
     - Prevents cascade desync when a folder sync mutates state but ultimately fails
-12. Freshness timestamps are parsed with **pure jq** (`fromdateiso8601`) — identical behavior on Linux, macOS, and Termux without platform-specific `date` binaries.
-13. **I/O-friendly API calls:** Reusable temp files in the retry loop eliminate `mktemp` churn on SD cards and slow storage.
-14. In GitHub Actions, generates a **markdown summary** on the workflow run page with sync results and upstream freshness.
-15. Prints a freshness report showing when each HaGeZi list was last updated on GitHub (local CLI only; Actions gets it in the Summary tab).
+12. **Name canonicalization (v2.2.0):**
+    - The config key (friendly name) is used as the canonical ControlD group name
+    - This ensures the skip logic, validation lookups, and `_OLD` cleanup all reference the same name
+    - Previously, the JSON-internal `group.group` field was used, which could mismatch the config key and defeat caching
+13. **Cache commit timing (v2.2.0):**
+    - The persistent cache is only written after a folder syncs successfully across all mapped profiles
+    - If any import fails, the cache is invalidated so the next run re-detects the change and retries
+    - This prevents a failed sync from being silently ignored by the hourly checker
+14. **Schema validation (v2.2.0):**
+    - Every downloaded JSON is checked for the expected schema (`group.group` string + `rules` array)
+    - Invalid payloads fail early instead of causing silent 0-rule imports
+15. **Stable-count validation (v2.2.0):**
+    - For large lists or server-side deduplication, the script accepts a stable rule count (unchanged across multiple polls) even if it doesn't exactly match the source
+    - This prevents infinite delete/import loops when ControlD normalizes or rejects a small subset of rules
+16. **Concurrency protection (v2.2.0):**
+    - The workflow uses a `concurrency` group to prevent two runs from interleaving
+    - Interleaved runs could delete each other's `_OLD` backup groups, breaking rollback
+17. Freshness timestamps are parsed with **pure jq** (`fromdateiso8601`) — identical behavior on Linux, macOS, and Termux without platform-specific `date` binaries.
+18. **I/O-friendly API calls:** Reusable temp files in the retry loop eliminate `mktemp` churn on SD cards and slow storage.
+19. In GitHub Actions, generates a **markdown summary** on the workflow run page with sync results and upstream freshness.
+20. Prints a freshness report showing when each HaGeZi list was last updated on GitHub (local CLI only; Actions gets it in the Summary tab).
 
 > **Note on caching:** GitHub raw URLs (`raw.githubusercontent.com`) do not support HTTP conditional requests (If-Modified-Since / ETag). The full payload is always downloaded. The cache saves ControlD API work, not bandwidth. For GitHub Actions, `actions/cache` persists the cache directory between runs.
 
@@ -332,6 +351,9 @@ It does **not** support:
 - [x] **Stale group cleanup** ✅ *Implemented in v2.1.1*
 - [x] **Large list support (ARG_MAX-safe)** ✅ *Implemented in v2.1.2*
 - [x] **State consistency after failed syncs** ✅ *Implemented in v2.1.2*
+- [x] **Name canonicalization and cache commit timing** ✅ *Implemented in v2.2.0*
+- [x] **Schema validation and stable-count polling** ✅ *Implemented in v2.2.0*
+- [x] **Concurrency protection and hardening** ✅ *Implemented in v2.2.0*
 - [ ] Rule-level diff to skip swaps when only metadata changed
 
 ---
@@ -340,16 +362,19 @@ It does **not** support:
 
 | Issue | Solution |
 |---|---|
-| `Missing dependencies` | Install `curl` and `jq`. |
+| `Missing dependencies` | Install `curl`, `jq`, and `cmp`. |
+| `bash 4.0+ required` | Upgrade bash. macOS ships 3.2 by default -- install via Homebrew (`brew install bash`). |
 | `Profile not found by name` | Ensure the profile name in `config.toml` matches exactly (case-sensitive) in ControlD. |
 | `Failed to fetch profiles (HTTP 401)` | Your API token is invalid or expired. Generate a new one from the ControlD dashboard. |
 | `Import failed (HTTP 4xx/5xx)` | The script retries automatically with exponential backoff. If persistent, check ControlD API status. The rollback will restore your original group. |
 | `--list-hagezi shows rate limit` | GitHub unauthenticated API limit is 60/hr or 5000/hr w/ `GITHUB_TOKEN` env var. |
 | `Cache format changed, clearing old cache` | The script auto-invalidates cache when the format changes. This is normal on first run after upgrade. |
 | `CRITICAL ERROR: Rollback failed` | The group is stuck as `{name}_OLD`. Manually rename it back in the ControlD dashboard, or run the sync again. |
-| `Validation failed — expected X rules, ControlD has 0` | ControlD processed the import asynchronously and rules weren't ready yet. The script retries automatically. If persistent, the folder may contain rules ControlD rejects (e.g. malformed wildcards). |
+| `Validation failed — expected X rules, ControlD has Y` | ControlD may dedupe or reject some rules. The script now accepts a stable count after extended polling. If the count is stable but lower, the sync succeeds with a warning. If it stays at 0, the folder may contain rules ControlD rejects (e.g. malformed wildcards). |
 | `Folder unchanged upstream but ControlD mismatch` | A previous import silently failed or the group was modified externally. The script detected this and is force-syncing to heal the state. |
 | `Argument list too long` | Fixed in v2.1.2+. The script now uses file-based uploads for large payloads. Upgrade if you're on an older version. |
+| `Timeout during import` | Added in v2.2.0: curl and job timeouts prevent indefinite hangs. Large lists may need more time -- the poll window now scales with list size. |
+| `Duplicate groups created` | Fixed in v2.2.0: the script now breaks the profile loop when group refresh fails, and uses concurrency groups in CI to prevent interleaved runs. |
 
 ---
 
