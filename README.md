@@ -58,7 +58,7 @@ cp config.toml.example config.toml
 
 3. **Edit `config.toml`** with your ControlD profile names and desired folder mappings.
 
-> ⚠️ **TOML Parser Note:** The built-in parser is intentionally minimal. Keep configs simple: use quoted keys, single-line or multi-line arrays, and basic strings. Avoid escaped quotes inside strings, multi-line literal strings, inline tables, or date/time types. See [TOML Parser Limitations](#under-the-hood) for details.
+> ⚠️ **TOML Parser Note:** The built-in parser is intentionally minimal. Keep configs simple: use quoted keys, single-line or multi-line arrays, and basic strings. Avoid escaped quotes inside strings, multi-line literal strings, inline tables, or date/time types. See [TOML Parser Limitations](#toml-parser-limitations) for details.
 
 4. **Commit `config.toml`** to the repo (do **not** put your API token in it).
 5. **Add your API token** as a GitHub secret:
@@ -320,7 +320,7 @@ Cache is passed between jobs using distinct keys (`hagezi-content-check-*` → `
 
 </details>
 
-<details>
+<details id="toml-parser-limitations">
 <summary><b>TOML Parser Limitations (click to expand)</b></summary>
 
 The built-in parser is intentionally minimal. It handles:

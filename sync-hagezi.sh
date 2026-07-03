@@ -1044,7 +1044,7 @@ main() {
         fi
 
         log ""
-        log "--- Profile: $pname ---"
+        log "--- Profile: $pname ($pid) ---"
 
         folder_list="${PROFILE_FOLDERS[$pname]}"
         [[ -z "$folder_list" ]] && { log "  WARN: No folders mapped"; continue; }
