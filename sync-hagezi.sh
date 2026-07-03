@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =============================================================================
 # ControlD HaGeZi Folder Auto-Sync
-# Version: 2.2.2
+# Version: 2.2.3
 # Description: Syncs HaGeZi DNS blocklist folders using atomic server-side swaps.
 # Requirements: bash 4.3+, curl, jq, cmp
 # =============================================================================
@@ -9,7 +9,7 @@
 set -o pipefail
 shopt -s extglob
 
-VERSION="2.2.2"
+VERSION="2.2.3"
 
 # Bash version check
 if (( BASH_VERSINFO[0] < 4 )); then
@@ -72,16 +72,6 @@ safe_name() {
 }
 
 # ---------------------------------------------------------------------------
-# URL REDACTION HELPER
-# ---------------------------------------------------------------------------
-
-redact_url() {
-    local url="$1"
-    # Redact profile IDs in URLs like /profiles/ABC123/...
-    printf '%s\n' "$url" | sed 's|/profiles/[a-zA-Z0-9]*/|/profiles/<id>/|g'
-}
-
-# ---------------------------------------------------------------------------
 # API RETRY HELPER
 # ---------------------------------------------------------------------------
 
@@ -114,7 +104,7 @@ api_call_with_retry() {
         [[ "$code" =~ ^(200|201|204)$ ]] && { printf '%s\n' "$body"; return 0; }
 
         retries=$(( retries - 1 ))
-        [[ "$retries" -le 0 ]] && { log "  ERROR: Max retries exceeded for $method $(redact_url "$url")"; return 1; }
+        [[ "$retries" -le 0 ]] && { log "  ERROR: Max retries exceeded for $method $url"; return 1; }
 
         if [[ "$code" == "429" ]]; then
             retry_after=$(awk '/^[Rr]etry-[Aa]fter:/ {print $2}' "$API_HDR_FILE" | tr -d '\r\n')
@@ -131,7 +121,7 @@ api_call_with_retry() {
             sleep "$delay"
             delay=$((delay * 2))
         else
-            log "  ERROR: API call failed (HTTP $code) on $method $(redact_url "$url")"
+            log "  ERROR: API call failed (HTTP $code) on $method $url"
             local resp_body
             resp_body=$(cat "$API_BODY_FILE" 2>/dev/null | head -c 500)
             [[ -n "$resp_body" ]] && log "  RESPONSE: $resp_body"
@@ -961,6 +951,8 @@ main() {
         [[ -n "$TARGET_PROFILE" && "$pname" != "$TARGET_PROFILE" ]] && continue
 
         pid=$(find_profile_id "$ALL_PROFILES" "$pname")
+        # Mask profile ID in GitHub Actions logs (no-op locally)
+        [[ -n "${GITHUB_ACTIONS:-}" && -n "$pid" && "$pid" != "null" ]] && echo "::add-mask::$pid"
         if [[ -z "$pid" || "$pid" == "null" ]]; then
             log ""
             log "--- Profile: $pname ---"
