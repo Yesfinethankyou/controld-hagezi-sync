@@ -32,9 +32,9 @@ names = ["EMPTY"]
 [folders]
 "Badware Hoster"         = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/badware-hoster-folder.json"
 "Most Abused TLDs"       = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/spam-tlds-combined-folder.json"
-"Apple Private Relay Allow"  = "https://github.com/hagezi/dns-blocklists/blob/main/controld/apple-private-relay-allow-folder.json"
+"Apple Private Relay Allow"  = "https://raw.githubusercontent.com/hagezi/dns-blocklists/blob/main/controld/apple-private-relay-allow-folder.json"
 "Referral Allow" = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/referral-allow-folder.json"
-"Ultimate Known Issues"     = "https://github.com/hagezi/dns-blocklists/blob/main/controld/ultimate-known_issues-allow-folder.json"
+"Ultimate Known Issues"     = "https://raw.githubusercontent.com/hagezi/dns-blocklists/blob/main/controld/ultimate-known_issues-allow-folder.json"
 
 # =============================================================================
 # PROFILE → FOLDER MAPPINGS
