@@ -1,0 +1,187 @@
+﻿{
+  "group": {
+    "group": "Remote Support Tools Low",
+    "action": {
+      "do": 1,
+      "status": 1
+    }
+  },
+    "rule": [
+      {
+        "PK": "*.screenconnect",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block Screenconnect Remote Desktop tool"
+      },
+      {
+        "PK": "ultraviewer.net",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tool"
+      },
+      {
+        "PK": "gotoassist.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "fastsupport.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "helpme.net",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "goto.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "getgo.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "ingest.sentry.io",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "logmein.comlogmeininc.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "gotoassist.me",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "gotoassist.at",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "gofastchat.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "desktopstreaming.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock GoTo"
+      },
+      {
+        "PK": "remotedesktop.google.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools."
+      },
+      {
+        "PK": "realvnc.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "uvnc.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "tightvnc.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "tigervnc.org",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "turbovnc.org",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "nomachine.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "ammyy.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      },
+      {
+        "PK": "rustdesk.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "Block remote access tools"
+      }
+    ]
+  }
