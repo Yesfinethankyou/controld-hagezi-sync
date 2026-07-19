@@ -20,7 +20,7 @@ dry_run = false
 
 [profiles]
 # Exact names of your ControlD profiles (case-sensitive).
-names = ["EMPTY", "Universal Allow"]
+names = ["Universal Allow"]
 
 # =============================================================================
 # FOLDER DEFINITIONS
@@ -44,13 +44,7 @@ names = ["EMPTY", "Universal Allow"]
 # =============================================================================
 
 [profile_folders]
-EMPTY    = [
-  "Badware Hoster",
-  "Apple Private Relay Allow",
-  "Ultimate Known Issues",
-  "Most Abused TLDs",
-  "Referral Allow"
-]
+
 Universal Allow = [
   "Apple Private Relay Allow",
   "Ultimate Known Issues",
