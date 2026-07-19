@@ -45,7 +45,7 @@ names = ["Universal Allow"]
 
 [profile_folders]
 
-Universal Allow = [
+"Universal Allow" = [
   "Apple Private Relay Allow",
   "Ultimate Known Issues",
   "Referral Allow"
