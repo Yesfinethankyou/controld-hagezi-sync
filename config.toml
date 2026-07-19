@@ -49,6 +49,7 @@ names = ["Universal Allow", "EMPTY"]
 "Universal Allow" = [
   "Apple Private Relay Allow",
   "Ultimate Known Issues",
+  "Remote Support Tools Low",
   "Referral Allow"
 ]
 "EMPTY" = [
