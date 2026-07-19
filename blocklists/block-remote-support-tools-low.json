@@ -1,4 +1,4 @@
-﻿{
+{
   "group": {
     "group": "Remote Support Tools Low",
     "action": {
@@ -6,7 +6,7 @@
       "status": 1
     }
   },
-    "rule": [
+    "rules": [
       {
         "PK": "*.screenconnect",
         "action": {
