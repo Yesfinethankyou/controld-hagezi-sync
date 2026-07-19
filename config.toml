@@ -20,7 +20,7 @@ dry_run = false
 
 [profiles]
 # Exact names of your ControlD profiles (case-sensitive).
-names = ["Universal Allow"]
+names = ["Universal Allow", "EMPTY"]
 
 # =============================================================================
 # FOLDER DEFINITIONS
@@ -35,6 +35,7 @@ names = ["Universal Allow"]
 "Apple Private Relay Allow"  = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/apple-private-relay-allow-folder.json"
 "Referral Allow" = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/referral-allow-folder.json"
 "Ultimate Known Issues"     = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/ultimate-known_issues-allow-folder.json"
+"Remote Support Tools Low" = "https://raw.githubusercontent.com/Yesfinethankyou/controld-hagezi-sync/refs/heads/main/blocklists/block-remote-support-tools-low.json"
 
 # =============================================================================
 # PROFILE → FOLDER MAPPINGS
@@ -50,3 +51,5 @@ names = ["Universal Allow"]
   "Ultimate Known Issues",
   "Referral Allow"
 ]
+"EMPTY" = [
+  "Remote Support Tools Low"
