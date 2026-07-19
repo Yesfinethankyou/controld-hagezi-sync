@@ -2,13 +2,13 @@
   "group": {
     "group": "Remote Support Tools Low",
     "action": {
-      "do": 1,
+      "do": 0,
       "status": 1
     }
   },
     "rules": [
       {
-        "PK": "*.screenconnect",
+        "PK": "screenconnect.com",
         "action": {
           "do": 0,
           "status": 1
@@ -72,12 +72,21 @@
         "comment": "BLock GoTo"
       },
       {
-        "PK": "logmein.comlogmeininc.com",
+        "PK": "logmein.com",
         "action": {
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "BLock LogMeIn"
+
+      },
+            {
+        "PK": "logmeininc.com",
+        "action": {
+          "do": 0,
+          "status": 1
+        },
+        "comment": "BLock LogMeIn"
       },
       {
         "PK": "gotoassist.me",
