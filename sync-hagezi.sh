@@ -655,34 +655,6 @@ print_freshness_report() {
 }
 
 # ---------------------------------------------------------------------------
-# ROLLBACK HELPER
-# ---------------------------------------------------------------------------
-
-rollback_group() {
-    local pid="$1" existing_pk="$2" name="$3" new_pk="$4"
-
-    if [[ -n "$new_pk" && "$new_pk" != "null" ]]; then
-        log "  Deleting partially-imported group..."
-        if ! delete_group_by_pk "$pid" "$new_pk" 2>/dev/null; then
-            log "  WARN: Failed to delete partially-imported group $new_pk"
-        fi
-    fi
-
-    if [[ -n "$existing_pk" && "$existing_pk" != "null" ]]; then
-        local rollback_payload
-        rollback_payload=$(jq -n --arg n "$name" '{"name": $n}')
-        if api_call_with_retry "PUT" "${API_BASE}/profiles/${pid}/groups/${existing_pk}" "$rollback_payload" >/dev/null; then
-            log "  Rollback complete. Restored original group."
-            return 0
-        else
-            log "  CRITICAL ERROR: Rollback failed. Group is stuck as '${name}_OLD'."
-            return 1
-        fi
-    fi
-    return 0
-}
-
-# ---------------------------------------------------------------------------
 # IMPORT WITH VALIDATION LOOP
 # ---------------------------------------------------------------------------
 
@@ -826,44 +798,36 @@ sync_folder() {
         delete_group_by_pk "$pid" "$stale_old_pk" 2>/dev/null || true
     fi
 
-    # Step 1: Rename existing to _OLD
-    if [[ -n "$existing_pk" && "$existing_pk" != "null" ]]; then
-        log "  Renaming existing group to '$old_name'..."
-        if [[ "$DRY_RUN" == false ]]; then
-            local rename_payload
-            rename_payload=$(jq -n --arg n "$old_name" '{"name": $n}')
-            if ! api_call_with_retry "PUT" "${API_BASE}/profiles/${pid}/groups/${existing_pk}" "$rename_payload" >/dev/null; then
-                log "  ERROR: Failed to rename existing group. Aborting."
-                summary_row "$pname" "$fname" "❌ Rename Failed" "-"
-                return 1
-            fi
-        fi
-    fi
-
-    # Step 2: Dry run
+    # Dry run
     if [[ "$DRY_RUN" == true ]]; then
-        log "  [DRY-RUN] Would import '$name' ($total_rules rules) and delete '$old_name'"
+        log "  [DRY-RUN] Would delete existing '$name' and import $total_rules rules"
         summary_row "$pname" "$fname" "✅ Success (Dry Run)" "$total_rules"
         return 0
     fi
 
-    # Step 3: Import with validation loop
+    # Step 1: Delete the existing group BEFORE importing.
+    # ControlD enforces custom-rule uniqueness within a profile, so the old
+    # copy's rules must be removed before the new copy is imported — otherwise
+    # re-importing the same domains collides ("Custom Rule already exists").
+    # Trade-off: a brief window where the folder is absent; a failed import is
+    # surfaced as an error and retried on the next scheduled run.
+    if [[ -n "$existing_pk" && "$existing_pk" != "null" ]]; then
+        log "  Deleting existing group before re-import (PK: $existing_pk)..."
+        if ! delete_group_by_pk "$pid" "$existing_pk"; then
+            log "  ERROR: Failed to delete existing group. Aborting."
+            summary_row "$pname" "$fname" "❌ Delete Failed" "-"
+            return 1
+        fi
+    fi
+
+    # Step 2: Import with validation loop
     new_pk=$(import_with_validation "$pid" "$name" "$cachefile" "$fname")
     if [[ -z "$new_pk" || "$new_pk" == "null" ]]; then
-        log "  ERROR: Import/validation failed. Attempting rollback..."
-        if rollback_group "$pid" "$existing_pk" "$name" "$new_pk"; then
-            summary_row "$pname" "$fname" "❌ Validation failed (rolled back)" "-"
-        else
-            summary_row "$pname" "$fname" "❌ CRITICAL: Rollback failed" "-"
-        fi
+        log "  ERROR: Import/validation failed. Folder is absent until the next sync."
+        summary_row "$pname" "$fname" "❌ Import failed" "-"
         return 1
     fi
 
-    # Step 4: Success — clean up old group
-    if [[ -n "$existing_pk" && "$existing_pk" != "null" ]]; then
-        log "  Cleaning up old group..."
-        delete_group_by_pk "$pid" "$existing_pk"
-    fi
     summary_row "$pname" "$fname" "✅ Success" "$total_rules"
     return 0
 }
