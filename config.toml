@@ -20,7 +20,7 @@ dry_run = false
 
 [profiles]
 # Exact names of your ControlD profiles (case-sensitive).
-names = ["EMPTY"]
+names = ["EMPTY", "Universal Allow"]
 
 # =============================================================================
 # FOLDER DEFINITIONS
@@ -51,4 +51,8 @@ EMPTY    = [
   "Most Abused TLDs",
   "Referral Allow"
 ]
-
+Universal Allow = [
+  "Apple Private Relay Allow",
+  "Ultimate Known Issues",
+  "Referral Allow"
+]
