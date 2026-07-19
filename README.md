@@ -32,13 +32,10 @@ Automatically sync HaGeZi DNS blocklists to your ControlD profiles via the Contr
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=0x11dfe%2Fcontrold-hagezi-sync&type=timeline&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&theme=dark&legend=top-left&sealed_token=lsEtyX712LZrD1t4RjDOhAyHoLaA5__1QgCQfc_NxDsnakZwcJihAMs7-giyy2QWH0nQAOrFCXZ6e8eClpuujfsvb2i2mD2CnaTZQ9ZKckDGR-McLFVXt_lenQ7uXC708IbTIdDpb5-QXYjPWboeqTvNpXRKPqSNkB1_-ea1CvCNrX12E3lDuGnKz5jy" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&legend=top-left&sealed_token=lsEtyX712LZrD1t4RjDOhAyHoLaA5__1QgCQfc_NxDsnakZwcJihAMs7-giyy2QWH0nQAOrFCXZ6e8eClpuujfsvb2i2mD2CnaTZQ9ZKckDGR-McLFVXt_lenQ7uXC708IbTIdDpb5-QXYjPWboeqTvNpXRKPqSNkB1_-ea1CvCNrX12E3lDuGnKz5jy" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&legend=top-left&sealed_token=lsEtyX712LZrD1t4RjDOhAyHoLaA5__1QgCQfc_NxDsnakZwcJihAMs7-giyy2QWH0nQAOrFCXZ6e8eClpuujfsvb2i2mD2CnaTZQ9ZKckDGR-McLFVXt_lenQ7uXC708IbTIdDpb5-QXYjPWboeqTvNpXRKPqSNkB1_-ea1CvCNrX12E3lDuGnKz5jy" />
- </picture>
-</a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="star-history-dark.svg">
+  <img alt="Star history" src="star-history.svg">
+</picture>
 
 ---
 
