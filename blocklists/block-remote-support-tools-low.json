@@ -29,7 +29,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "fastsupport.com",
@@ -37,7 +37,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "helpme.net",
@@ -45,7 +45,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "goto.com",
@@ -53,7 +53,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "getgo.com",
@@ -61,7 +61,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "ingest.sentry.io",
@@ -69,7 +69,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "logmein.com",
@@ -77,7 +77,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock LogMeIn"
+        "comment": "Block LogMeIn"
 
       },
             {
@@ -86,7 +86,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock LogMeIn"
+        "comment": "Block LogMeIn"
       },
       {
         "PK": "gotoassist.me",
@@ -94,7 +94,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "gotoassist.at",
@@ -102,7 +102,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "gofastchat.com",
@@ -110,7 +110,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "desktopstreaming.com",
@@ -118,7 +118,7 @@
           "do": 0,
           "status": 1
         },
-        "comment": "BLock GoTo"
+        "comment": "Block GoTo"
       },
       {
         "PK": "remotedesktop.google.com",
