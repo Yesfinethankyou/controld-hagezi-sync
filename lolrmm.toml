@@ -25,6 +25,7 @@ never_block_apex = [
   "azureedge.net",
   "github.com",
   "google.com",
+  "github.com"
 ]
 
 # Plain-text IP lists (Ubiquiti / firewall ingestion, future use).
