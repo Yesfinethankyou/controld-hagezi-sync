@@ -191,6 +191,25 @@ def render_ip_list(ips: set[str]) -> str:
     return "".join(f"{ip}\n" for ip in ordered)
 
 
+def collect_ips(which, referenced_tools, index, never_block_apex, allowlist) -> set[str]:
+    """Gather IPs for one IP list from the selected tools.
+
+    `which` is either "all" (every tool referenced by any domain blocklist) or an
+    explicit list of tool names (validated the same way as a blocklist's tools).
+    """
+    if which == "all":
+        ip_tools = list(referenced_tools.values())
+    else:
+        ip_tools = [t for _, t in resolve_tools(which, index)]
+    ips: set[str] = set()
+    for tool in ip_tools:
+        for raw in domains_of(tool):
+            res = groom_domain(raw, never_block_apex, allowlist)
+            if res and res[0] == "ip":
+                ips.add(res[1])
+    return ips
+
+
 def existing_pks(path: Path) -> set[str] | None:
     """Return the set of PKs in an existing blocklist JSON, or None if absent/unreadable."""
     if not path.exists():
@@ -274,7 +293,6 @@ def main() -> int:
     # Groom every blocklist first (collecting IPs + referenced tools) so the sanity
     # brake can abort the whole run before any file is written.
     outputs: list[tuple[Path, str, set[str], set[str] | None]] = []  # path, content, new_pks, old_pks
-    all_ips: set[str] = set()
     referenced_tools: dict[str, dict] = {}  # lowercased name -> tool (union across lists)
 
     for key, bl in blocklists.items():
@@ -284,7 +302,6 @@ def main() -> int:
         for name, tool in resolved:
             referenced_tools[name.lower()] = tool
         domains, ips = build_blocklist(bl, resolved, never_block_apex, allowlist)
-        all_ips |= ips
         print(f"[{key}] {len(domains)} domains, {len(ips)} IPs routed to IP list")
         content = render_blocklist_json(group_name, domains)
         new_pks = set(domains)
@@ -292,25 +309,21 @@ def main() -> int:
         sanity_check(f"[{key}] {out_path}", old_pks, new_pks)
         outputs.append((out_path, content, new_pks, old_pks))
 
-    # IP list: gather IPs from the configured set of tools.
-    ipcfg = cfg.get("ip_blocklist")
-    if ipcfg:
-        ip_out = Path(ipcfg["output"])
-        which = ipcfg.get("tools", "all")
-        if which == "all":
-            ip_tools = list(referenced_tools.values())
-        else:
-            ip_tools = [t for _, t in resolve_tools(which, index)]
-        ips: set[str] = set()
-        for tool in ip_tools:
-            for raw in domains_of(tool):
-                res = groom_domain(raw, never_block_apex, allowlist)
-                if res and res[0] == "ip":
-                    ips.add(res[1])
-        print(f"[ip_blocklist] {len(ips)} IPs")
-        ip_content = render_ip_list(ips)
-        sanity_check(f"[ip_blocklist] {ip_out}", existing_ips(ip_out), ips)
-        outputs.append((ip_out, ip_content, ips, None))
+    # IP lists: one or more. The idiom is repeatable [ip_blocklists.<name>] tables,
+    # each with its own output file and tool selector; the singular [ip_blocklist]
+    # table is still honored for back-compat.
+    ip_specs: list[tuple[str, dict]] = [
+        (f"ip_blocklists.{name}", spec)
+        for name, spec in (cfg.get("ip_blocklists") or {}).items()
+    ]
+    if "ip_blocklist" in cfg:
+        ip_specs.append(("ip_blocklist", cfg["ip_blocklist"]))
+    for label, spec in ip_specs:
+        ip_out = Path(spec["output"])
+        ips = collect_ips(spec.get("tools", "all"), referenced_tools, index, never_block_apex, allowlist)
+        print(f"[{label}] {len(ips)} IPs")
+        sanity_check(f"[{label}] {ip_out}", existing_ips(ip_out), ips)
+        outputs.append((ip_out, render_ip_list(ips), ips, None))
 
     changed = False
     for path, content, _new, _old in outputs:

@@ -27,10 +27,18 @@ never_block_apex = [
   "google.com",
 ]
 
-# Plain-text IP list (Ubiquiti, future use).
-[ip_blocklist]
+# Plain-text IP lists (Ubiquiti / firewall ingestion, future use).
+# Repeatable: add as many [ip_blocklists.<name>] tables as you want, each with its
+# own output file and tool selector. The script loops over all of them.
+# (The singular [ip_blocklist] table is still honored for back-compat.)
+[ip_blocklists.rmm]
 output = "blocklists/block-rmm-ips.txt"
 tools = "all"   # "all" = every tool referenced by any domain blocklist; or an explicit array
+
+# Example: a second list scoped to specific tools.
+# [ip_blocklists.simplehelp]
+# output = "blocklists/block-simplehelp-ips.txt"
+# tools = ["SimpleHelp"]
 
 # One table per output blocklist — the script loops over whatever tables exist.
 # Additional tiers ([blocklists.remote-support-medium] / -high) can be added later;
