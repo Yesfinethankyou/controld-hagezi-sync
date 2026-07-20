@@ -32,8 +32,23 @@ never_block_apex = [
 # own output file and tool selector. The script loops over all of them.
 # (The singular [ip_blocklist] table is still honored for back-compat.)
 [ip_blocklists.rmm]
-output = "blocklists/block-rmm-ips.txt"
-tools = "all"   # "all" = every tool referenced by any domain blocklist; or an explicit array
+output = "blocklists/block-rmm-ips-low.txt"
+tools = [
+  "ScreenConnect",
+  "ConnectWise Control",
+  "UltraViewer",
+  "GoToAssist",
+  "LogMeIn",
+  "Chrome Remote Desktop",
+  "RealVNC",
+  "UltraVNC",
+  "TightVNC",
+  "TigerVNC",
+  "NoMachine",
+  "Ammyy Admin",
+  "RustDesk",
+  "NetSupport Manager"
+] 
 
 # Example: a second list scoped to specific tools.
 # [ip_blocklists.simplehelp]
