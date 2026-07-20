@@ -1,0 +1,61 @@
+# =============================================================================
+# LOLRMM → ControlD Blocklist Groomer — Configuration
+# =============================================================================
+# Consumed by groom_lolrmm.py (Python 3.11+ stdlib, parsed with tomllib).
+# Unlike the parent repo's config.toml (minimal bash parser), this file is read
+# by tomllib, so full TOML is fine.
+# =============================================================================
+
+[settings]
+feed_url = "https://lolrmm.io/api/rmm_tools.json"
+
+# Domains never emitted, regardless of feed contents. Escape hatch for tools in use.
+[allowlist]
+# ingest.sentry.io is Sentry telemetry (not a GoTo domain); it was a curation bug
+# in the original hand-made list.
+domains = ["ingest.sentry.io"]
+
+# Refuse to emit these as BARE apex domains (e.g. after wildcard collapse).
+# Full hostnames underneath them are fine (e.g. foo.blob.core.windows.net passes).
+[guardrails]
+never_block_apex = [
+  "windows.net",
+  "amazonaws.com",
+  "cloudfront.net",
+  "azureedge.net",
+  "github.com",
+  "google.com",
+]
+
+# Plain-text IP list (Ubiquiti, future use).
+[ip_blocklist]
+output = "blocklists/block-rmm-ips.txt"
+tools = "all"   # "all" = every tool referenced by any domain blocklist; or an explicit array
+
+# One table per output blocklist — the script loops over whatever tables exist.
+# Additional tiers ([blocklists.remote-support-medium] / -high) can be added later;
+# the script requires no code changes to pick them up.
+[blocklists.remote-support-low]
+group_name = "Remote Support Tools Low"
+output = "blocklists/block-remote-support-tools-low.json"
+# Seeded from the tools represented in the original hand-made
+# blocklists/block-remote-support-tools-low.json (see groomer Step 3 validation).
+# Names must match the feed's `Name` field exactly (case-insensitive); an unknown
+# name fails the run loudly. RealVNC / TigerVNC are listed for coverage intent even
+# though the feed currently carries no usable domains for them (user_managed only).
+# The hand-made list's turbovnc.org has no corresponding LOLRMM tool entry.
+tools = [
+  "ScreenConnect",
+  "ConnectWise Control",
+  "UltraViewer",
+  "GoToAssist",
+  "LogMeIn",
+  "Chrome Remote Desktop",
+  "RealVNC",
+  "UltraVNC",
+  "TightVNC",
+  "TigerVNC",
+  "NoMachine",
+  "Ammyy Admin",
+  "RustDesk",
+]
