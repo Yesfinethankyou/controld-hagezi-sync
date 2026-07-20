@@ -85,6 +85,11 @@ def domains_of(tool: dict) -> list[str]:
 
 def resolve_tools(names: list[str], index: dict[str, dict]) -> list[tuple[str, dict]]:
     """Resolve config tool names against the feed. Unknown names fail the run loudly."""
+    if isinstance(names, str):
+        die(
+            f"'tools' must be an array of tool names, got string {names!r} "
+            '(only IP-list tables accept the literal string "all")'
+        )
     resolved: list[tuple[str, dict]] = []
     unknown: list[str] = []
     for name in names:
@@ -112,15 +117,22 @@ def groom_domain(raw: str, never_block_apex: set[str], allowlist: set[str]):
     # 2. Drop sentinels / empties.
     if not dom or dom == "user_managed":
         return None
-    # 3. IP fork: real IPs go to the IP list, not the domain list.
+    # 3. IP fork: real IPs and CIDR ranges go to the IP list, not the domain list.
     try:
-        ipaddress.ip_address(dom)
+        ipaddress.ip_network(dom, strict=False)
         return ("ip", dom)
     except ValueError:
         pass
     # 4. Wildcard collapse: *.foo.com -> foo.com (ControlD blocks subdomains natively).
-    if dom.startswith("*."):
-        dom = dom[2:]
+    # Mid-label wildcards (plus*.site24x7.com, a.*.b.com) collapse to the nearest
+    # fully-literal parent domain for the same reason.
+    if "*" in dom:
+        labels = dom.split(".")
+        last_star = max(i for i, label in enumerate(labels) if "*" in label)
+        dom = ".".join(labels[last_star + 1 :])
+        if not dom:
+            warn(f"dropping unusable wildcard {raw.strip().lower()!r}")
+            return None
     # 5. Guardrail: never emit a bare shared-infra apex. Hostnames under it pass.
     if dom in never_block_apex:
         warn(f"guardrail: refusing to block shared-infra apex {dom!r}")
@@ -152,7 +164,7 @@ def drop_subsumed(domains: dict[str, str]) -> dict[str, str]:
     return result
 
 
-def build_blocklist(cfg, resolved_tools, never_block_apex, allowlist):
+def build_blocklist(resolved_tools, never_block_apex, allowlist):
     """Groom one blocklist. Returns (domain->tool dict, set of IP strings)."""
     domains: dict[str, str] = {}  # domain -> first contributing tool (config order)
     ips: set[str] = set()
@@ -187,8 +199,14 @@ def render_blocklist_json(group_name: str, domains: dict[str, str]) -> str:
 
 def render_ip_list(ips: set[str]) -> str:
     """Render deterministic plain-text IP list: sorted, deduped, trailing NL."""
-    ordered = sorted(ips, key=lambda s: (ipaddress.ip_address(s).version, ipaddress.ip_address(s)))
-    return "".join(f"{ip}\n" for ip in ordered)
+
+    def sort_key(entry: str):
+        net = ipaddress.ip_network(entry, strict=False)
+        # Trailing `entry` breaks ties (e.g. "1.2.3.4" vs "1.2.3.4/32") so output
+        # never depends on set iteration order.
+        return (net.version, net.network_address, net.prefixlen, entry)
+
+    return "".join(f"{ip}\n" for ip in sorted(ips, key=sort_key))
 
 
 def collect_ips(which, referenced_tools, index, never_block_apex, allowlist) -> set[str]:
@@ -301,7 +319,7 @@ def main() -> int:
         resolved = resolve_tools(bl["tools"], index)
         for name, tool in resolved:
             referenced_tools[name.lower()] = tool
-        domains, ips = build_blocklist(bl, resolved, never_block_apex, allowlist)
+        domains, ips = build_blocklist(resolved, never_block_apex, allowlist)
         print(f"[{key}] {len(domains)} domains, {len(ips)} IPs routed to IP list")
         content = render_blocklist_json(group_name, domains)
         new_pks = set(domains)
