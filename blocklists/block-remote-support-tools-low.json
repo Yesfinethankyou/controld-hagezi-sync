@@ -64,6 +64,14 @@
       "comment": "Block GoToAssist (LOLRMM)"
     },
     {
+      "PK": "geo.netsupportsoftware.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block NetSupport Manager (LOLRMM)"
+    },
+    {
       "PK": "getgo.com",
       "action": {
         "do": 0,
@@ -150,6 +158,14 @@
         "status": 1
       },
       "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "netsupportmanager.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block NetSupport Manager (LOLRMM)"
     },
     {
       "PK": "nomachine.com",
