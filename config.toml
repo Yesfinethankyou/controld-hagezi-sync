@@ -20,7 +20,7 @@ dry_run = false
 
 [profiles]
 # Exact names of your ControlD profiles (case-sensitive).
-names = ["Universal Allow", "TEST", "Scam-Risk-Low"]
+names = ["Universal Allow", "TEST", "Scam-Risk-Low", "Scam-Risk-Medium"]
 
 # =============================================================================
 # FOLDER DEFINITIONS
@@ -56,6 +56,12 @@ names = ["Universal Allow", "TEST", "Scam-Risk-Low"]
   "Remote Support Tools Low"
 ]
 "Scam-Risk-Low" = [
+  "Microsoft Allow",
+  "Spam TLD Combined",
+  "Remote Support Tools Low"
+]
+"Scam-Risk-Medium" = [
+  "Badware Hoster",
   "Microsoft Allow",
   "Spam TLD Combined",
   "Remote Support Tools Low"
