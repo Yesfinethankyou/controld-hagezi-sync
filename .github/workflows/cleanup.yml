@@ -50,7 +50,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           EVENT: ${{ github.event_name }}
-          TRIGGER_EVENT: ${{ github.event.workflow_run.event || '' }}
           FORCE: ${{ inputs.force_delete_all }}
           MAX_RUNS: 100
           MAX_AGE_DAYS: 30
@@ -62,11 +61,11 @@ jobs:
             local attempt max_attempts=3 delay=5
             for (( attempt=1; attempt<=max_attempts; attempt++ )); do
               if output=$(gh api --paginate "/repos/$REPO/actions/runs?status=completed&per_page=100" \
-                    --jq '.workflow_runs[] | "\(.created_at)\t\(.id)\t\(.workflow_id)\t\(.name)"' 2>&1); then
+                    --jq '.workflow_runs[] | "\(.created_at)\t\(.id)\t\(.workflow_id)\t\(.name)\t\(.conclusion)"' 2>/dev/null); then
                 echo "$output"
                 return 0
               fi
-              echo "::warning::API fetch attempt $attempt/$max_attempts failed: $output" >&2
+              echo "::warning::API fetch attempt $attempt/$max_attempts failed" >&2
               if (( attempt < max_attempts )); then
                 sleep "$delay"
                 delay=$(( delay * 2 ))
@@ -81,14 +80,9 @@ jobs:
             echo "No completed runs found (or API error). Exiting."
             exit 0
           fi
-          echo "Found ${#runs[@]} completed run(s); mode: $EVENT, trigger: ${TRIGGER_EVENT:-n/a}, force: ${FORCE:-false}"
+          echo "Found ${#runs[@]} completed run(s); mode: $EVENT, force: ${FORCE:-false}"
 
-          # Determine cleanup mode based on trigger
-          # - schedule: age-based cleanup (delete runs older than MAX_AGE_DAYS)
-          # - workflow_run (any conclusion): MAX_RUNS cleanup (keep latest MAX_RUNS per workflow)
-          # - workflow_dispatch: both age-based and MAX_RUNS cleanup
-          # Note: On workflow_run triggers, we always run cleanup regardless of conclusion
-          #       (success or failure). Failed runs are only deleted if older than MAX_AGE_DAYS.
+          # Determine cleanup mode
           age_cleanup=false
           max_runs_cleanup=false
           if [[ "$EVENT" == "schedule" ]]; then
@@ -96,31 +90,17 @@ jobs:
           elif [[ "$EVENT" == "workflow_dispatch" ]]; then
             age_cleanup=true
             max_runs_cleanup=true
-          elif [[ "$EVENT" == "workflow_run" && "$TRIGGER_EVENT" == "schedule" ]]; then
-            age_cleanup=true
           elif [[ "$EVENT" == "workflow_run" ]]; then
-            # Any sync completion (success or failure) - apply MAX_RUNS cap
-            # Failed runs older than MAX_AGE_DAYS are also deleted via age_cleanup
-            max_runs_cleanup=true
-            # Also enable age-based cleanup on workflow_run to catch failed runs older than 30 days
+            # After every sync completion — regardless of whether the sync was
+            # schedule-triggered, push-triggered, or manual — run both cleanups.
             age_cleanup=true
-          fi
-
-          # Fetch detailed run info to check conclusion (success/failure)
-          # We need this to protect failed runs from MAX_RUNS cleanup
-          declare -A run_conclusions
-          if [[ "$max_runs_cleanup" == "true" ]]; then
-            while IFS=$'\t' read -r created id wf name; do
-              [[ -z "$id" ]] && continue
-              conclusion=$(gh api "/repos/$REPO/actions/runs/$id" --jq '.conclusion // "unknown"' 2>/dev/null || echo "unknown")
-              run_conclusions[$id]="$conclusion"
-            done < <(printf '%s\n' "${runs[@]}")
+            max_runs_cleanup=true
           fi
 
           declare -A seen
           deleted=0
           for line in "${runs[@]}"; do
-            IFS=$'\t' read -r created id wf name <<< "$line"
+            IFS=$'\t' read -r created id wf name conclusion <<< "$line"
 
             # Skip empty/malformed lines
             if [[ -z "$id" || -z "$wf" ]]; then
@@ -138,10 +118,8 @@ jobs:
             if [[ "$FORCE" == "true" ]]; then
               delete=true
             elif [[ "$max_runs_cleanup" == "true" && ${seen[$wf]} -gt $MAX_RUNS ]]; then
-              # On workflow_run triggers, don't delete failed runs via MAX_RUNS
-              # Failed runs are only cleaned up via age-based cleanup (older than 30 days)
-              if [[ "$EVENT" == "workflow_run" && "${run_conclusions[$id]}" != "success" ]]; then
-                # Skip MAX_RUNS deletion for failed runs, but still allow age-based deletion
+              # Only cap successful runs via MAX_RUNS; failed runs are left for age_cleanup
+              if [[ "$EVENT" == "workflow_run" && "$conclusion" != "success" ]]; then
                 :
               else
                 delete=true
@@ -161,3 +139,4 @@ jobs:
           done
 
           echo "Deleted $deleted run(s)"
+
