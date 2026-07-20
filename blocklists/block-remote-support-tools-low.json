@@ -6,191 +6,214 @@
       "status": 1
     }
   },
-    "rules": [
-      {
-        "PK": "screenconnect.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block Screenconnect Remote Desktop tool"
+  "rules": [
+    {
+      "PK": "ammyy.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "ultraviewer.net",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tool"
+      "comment": "Block Ammyy Admin (LOLRMM)"
+    },
+    {
+      "PK": "chromoting-client.talkgadget.google.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "gotoassist.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "chromoting-host.talkgadget.google.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "fastsupport.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "chromoting-oauth.talkgadget.google.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "helpme.net",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "connectwise.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "goto.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block ScreenConnect (LOLRMM)"
+    },
+    {
+      "PK": "desktopstreaming.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "getgo.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "fastsupport.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "ingest.sentry.io",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "getgo.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "logmein.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block LogMeIn"
-
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "goto.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-            {
-        "PK": "logmeininc.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block LogMeIn"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "gotoassist.at",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "gotoassist.me",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "gotoassist.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "gotoassist.at",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "gotoassist.me",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "gofastchat.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "helpme.net",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "desktopstreaming.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block GoTo"
+      "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "logmein-gateway.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "remotedesktop.google.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools."
+      "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "logmein.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "realvnc.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "logmein.eu",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "uvnc.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "logmeininc.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "tightvnc.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "logmeinrescue.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "tigervnc.org",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block LogMeIn (LOLRMM)"
+    },
+    {
+      "PK": "nomachine.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "turbovnc.org",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block NoMachine (LOLRMM)"
+    },
+    {
+      "PK": "remotedesktop-pa.googleapis.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "nomachine.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "remotedesktop.google.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "ammyy.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
+      "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "rustdesk.com",
+      "action": {
+        "do": 0,
+        "status": 1
       },
-      {
-        "PK": "rustdesk.com",
-        "action": {
-          "do": 0,
-          "status": 1
-        },
-        "comment": "Block remote access tools"
-      }
-    ]
-  }
+      "comment": "Block RustDesk (LOLRMM)"
+    },
+    {
+      "PK": "screenconnect.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block ScreenConnect (LOLRMM)"
+    },
+    {
+      "PK": "tightvnc.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block TightVNC (LOLRMM)"
+    },
+    {
+      "PK": "ultraviewer.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block UltraViewer (LOLRMM)"
+    },
+    {
+      "PK": "ultravnc.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block UltraVNC (LOLRMM)"
+    }
+  ]
+}
