@@ -30,12 +30,13 @@ names = ["Universal Allow", "TEST"]
 # =============================================================================
 
 [folders]
-"Badware Hoster"         = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/badware-hoster-folder.json"
-"Most Abused TLDs"       = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/spam-tlds-combined-folder.json"
 "Apple Private Relay Allow"  = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/apple-private-relay-allow-folder.json"
+"Badware Hoster"         = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/badware-hoster-folder.json"
+"Microsoft Allow" = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/microsoft-allow-folder.json"
 "Referral Allow" = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/controld/referral-allow-folder.json"
-"Ultimate Known Issues"     = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/ultimate-known_issues-allow-folder.json"
 "Remote Support Tools Low" = "https://raw.githubusercontent.com/Yesfinethankyou/controld-hagezi-sync/refs/heads/main/blocklists/block-remote-support-tools-low.json"
+"Spam TLD Combined" = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/spam-tlds-combined-folder.json"
+"Ultimate Known Issues"     = "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/controld/ultimate-known_issues-allow-folder.json"
 
 # =============================================================================
 # PROFILE → FOLDER MAPPINGS
@@ -48,10 +49,18 @@ names = ["Universal Allow", "TEST"]
 
 "Universal Allow" = [
   "Apple Private Relay Allow",
-  "Ultimate Known Issues",
   "Remote Support Tools Low",
-  "Referral Allow"
+  "Referral Allow",
+  "Ultimate Known Issues"
 ]
 "TEST" = [
+  "Remote Support Tools Low"
+]
+"Scam-Risk-Low" = [
+  "Apple Private Relay Allow",
+  "Microsoft Allow",
+  "Referral Allow",
+  "Spam TLD Combined",
+  "Ultimate Known Issues",
   "Remote Support Tools Low"
 ]
