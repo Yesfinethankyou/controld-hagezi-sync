@@ -1,0 +1,73 @@
+name: Groom LOLRMM blocklists
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # weekly, Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: groom-lolrmm
+  cancel-in-progress: false
+
+jobs:
+  groom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Groom LOLRMM feed
+        run: python3 groom_lolrmm.py
+
+      - name: Stage changes
+        run: git add blocklists/
+
+      - name: Write step summary
+        if: always()
+        run: |
+          {
+            echo "## LOLRMM blocklist changes"
+            echo ""
+            # Use the staged diff so brand-new files (first run) show up too.
+            diff=$(git diff --cached -- blocklists/)
+            if [[ -z "$diff" ]]; then
+              echo "_No changes this run._"
+              exit 0
+            fi
+            # Extract + / - entries, then keep only the true set delta so a pure
+            # reformat (lines appearing on both sides) cancels out. Domains come from
+            # ControlD JSON "PK" lines; IPs from bare +/- IP lines in the plain-text list.
+            plus_dom=$(echo "$diff"  | grep -oE '^\+ +"PK": "[^"]+"' | sed -E 's/.*"PK": "([^"]+)".*/\1/' | sort -u)
+            minus_dom=$(echo "$diff" | grep -oE '^- +"PK": "[^"]+"' | sed -E 's/.*"PK": "([^"]+)".*/\1/' | sort -u)
+            plus_ip=$(echo "$diff"   | grep -oE '^\+[0-9a-fA-F:.]+$' | sed 's/^+//' | sort -u)
+            minus_ip=$(echo "$diff"  | grep -oE '^-[0-9a-fA-F:.]+$' | sed 's/^-//' | sort -u)
+            added_dom=$(comm -23 <(echo "$plus_dom") <(echo "$minus_dom"))
+            removed_dom=$(comm -13 <(echo "$plus_dom") <(echo "$minus_dom"))
+            added_ip=$(comm -23 <(echo "$plus_ip") <(echo "$minus_ip"))
+            removed_ip=$(comm -13 <(echo "$plus_ip") <(echo "$minus_ip"))
+            emit() {
+              local title="$1" body="$2"
+              if [[ -n "$body" ]]; then
+                echo "### $title"
+                echo '```'
+                echo "$body"
+                echo '```'
+                echo ""
+              fi
+            }
+            emit "Domains added" "$added_dom"
+            emit "Domains removed" "$removed_dom"
+            emit "IPs added" "$added_ip"
+            emit "IPs removed" "$removed_ip"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit and push if changed
+        run: |
+          git diff --cached --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: refresh LOLRMM blocklists"
+          git push
