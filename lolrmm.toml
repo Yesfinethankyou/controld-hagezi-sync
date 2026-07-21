@@ -48,7 +48,14 @@ tools = [
   "NoMachine",
   "Ammyy Admin",
   "RustDesk",
-  "NetSupport Manager"
+  "NetSupport Manager",
+  "NetSupport Manager",
+  "TeamViewer",
+  "LogMeIn rescue",
+  "Quick Assist",
+  "AnyDesk",
+  "Zoho Assist",
+  "RemotePC"
 ] 
 
 # Example: a second list scoped to specific tools.
@@ -82,5 +89,11 @@ tools = [
   "NoMachine",
   "Ammyy Admin",
   "RustDesk",
-  "NetSupport Manager"
+  "NetSupport Manager",
+  "TeamViewer",
+  "LogMeIn rescue",
+  "Quick Assist",
+  "AnyDesk",
+  "Zoho Assist",
+  "RemotePC"
 ]
