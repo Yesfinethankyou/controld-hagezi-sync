@@ -55,7 +55,22 @@ tools = [
   "Quick Assist",
   "AnyDesk",
   "Zoho Assist",
-  "RemotePC"
+  "RemotePC",
+  "ConnectWise Control",
+  "RemoteUtilities",
+  "Splashtop",
+  "Atera",
+  "Pulseway",
+  "Electric AI (Kaseya)",
+  "Kaseya (VSA)",
+  "GoToMyPC",
+  "GoToHTTP",
+  "GoToAssist (GoTo Resolve)",
+  "GoTo Opener",
+  "N-Able Advanced Monitoring Agent",
+  "BeAnyWhere",
+  "BeyondTrust (Bomgar)",
+  "BeyondTrust"
 ] 
 
 # Example: a second list scoped to specific tools.
@@ -95,5 +110,20 @@ tools = [
   "Quick Assist",
   "AnyDesk",
   "Zoho Assist",
-  "RemotePC"
+  "RemotePC",
+  "ConnectWise Control",
+  "RemoteUtilities",
+  "Splashtop",
+  "Atera",
+  "Pulseway",
+  "Electric AI (Kaseya)",
+  "Kaseya (VSA)",
+  "GoToMyPC",
+  "GoToHTTP",
+  "GoToAssist (GoTo Resolve)",
+  "GoTo Opener",
+  "N-Able Advanced Monitoring Agent",
+  "BeAnyWhere",
+  "BeyondTrust (Bomgar)",
+  "BeyondTrust"
 ]
