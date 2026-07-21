@@ -6,6 +6,11 @@
 *.swp
 *.swo
 
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.pyc
+=======
+# Star History charts
+star-history*.svg
+>>>>>>> upstream/main

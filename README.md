@@ -32,13 +32,10 @@ Automatically sync HaGeZi DNS blocklists to your ControlD profiles via the Contr
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=0x11dfe%2Fcontrold-hagezi-sync&type=timeline&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&theme=dark&legend=top-left&sealed_token=QuImaITkswYwT4BKpHN4W4Pqe7DokqxYyaJNmHvVykFZz6gPq3kswApaM40PurYBDbuFfHo8R2Myb9SQ0QblkfyhiLA2wniFdYHb752uh8CgcSmPFTgcLxhbcXqNuSYmneHbUW-tmQJnKlTJ1HBwiuJU7AUIJJ3PEKfFNESY28ynJ7WxKHXs-Px-uBD0" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&legend=top-left&sealed_token=QuImaITkswYwT4BKpHN4W4Pqe7DokqxYyaJNmHvVykFZz6gPq3kswApaM40PurYBDbuFfHo8R2Myb9SQ0QblkfyhiLA2wniFdYHb752uh8CgcSmPFTgcLxhbcXqNuSYmneHbUW-tmQJnKlTJ1HBwiuJU7AUIJJ3PEKfFNESY28ynJ7WxKHXs-Px-uBD0" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=0x11dfe/controld-hagezi-sync&type=timeline&legend=top-left&sealed_token=QuImaITkswYwT4BKpHN4W4Pqe7DokqxYyaJNmHvVykFZz6gPq3kswApaM40PurYBDbuFfHo8R2Myb9SQ0QblkfyhiLA2wniFdYHb752uh8CgcSmPFTgcLxhbcXqNuSYmneHbUW-tmQJnKlTJ1HBwiuJU7AUIJJ3PEKfFNESY28ynJ7WxKHXs-Px-uBD0" />
- </picture>
-</a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="star-history-dark.svg">
+  <img alt="Star history" src="star-history.svg">
+</picture>
 
 ---
 
@@ -243,13 +240,15 @@ Cache is passed between jobs using distinct keys (`hagezi-content-check-*` → `
 
 ### Automated cleanup
 
-A separate **`Cleanup workflow runs`** workflow runs on a monthly schedule and after every successful scheduled sync. It:
+A separate **`Cleanup workflow runs`** workflow runs on a monthly schedule and after every completed sync (regardless of success or failure). It:
 
-- Deletes logs from the completed sync run
-- Removes old workflow runs older than **30 days**
-- Enforces a maximum of **100 retained runs** per workflow
-- Always preserves the **latest run** as a sentinel
+- Deletes logs from the completed sync run (successful runs only)
+- Removes successful workflow runs if they exceed **100 per workflow** (keeps the latest)
+- Removes runs older than **30 days** (applies to both successful and failed runs)
+- Failed runs are **preserved** unless they're older than 30 days
+- Always preserves the **latest run** of each workflow as a sentinel
 - Supports a manual `force_delete_all` option via `workflow_dispatch`
+- Includes retry logic for transient GitHub API errors during pagination
 
 ---
 

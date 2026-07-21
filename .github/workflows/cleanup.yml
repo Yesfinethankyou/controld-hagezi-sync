@@ -40,6 +40,10 @@ jobs:
 
   delete-runs:
     runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'workflow_run'
     steps:
       - name: Delete old workflow runs
         env:
@@ -52,20 +56,64 @@ jobs:
         run: |
           cutoff=$(date -u -d "$MAX_AGE_DAYS days ago" +%Y-%m-%dT%H:%M:%SZ)
 
-          mapfile -t runs < <(
-            gh api --paginate "/repos/$REPO/actions/runs?status=completed&per_page=100" \
-              --jq '.workflow_runs[] | "\(.created_at)\t\(.id)\t\(.workflow_id)\t\(.name)"' \
-            | sort -r
-          )
-          echo "Found ${#runs[@]} completed run(s); mode: $EVENT, force: ${FORCE:-false}"
+          fetch_runs() {
+            local attempt max_attempts=3 delay=5
+            for (( attempt=1; attempt<=max_attempts; attempt++ )); do
+              if output=$(gh api --paginate "/repos/$REPO/actions/runs?status=completed&per_page=100" \
+                    --jq '.workflow_runs[] | "\(.created_at)\t\(.id)\t\(.workflow_id)\t\(.name)\t\(.conclusion)"' 2>/dev/null); then
+                echo "$output"
+                return 0
+              fi
+              echo "::warning::API fetch attempt $attempt/$max_attempts failed" >&2
+              if (( attempt < max_attempts )); then
+                sleep "$delay"
+                delay=$(( delay * 2 ))
+              fi
+            done
+            echo "::error::Failed to fetch workflow runs after $max_attempts attempts" >&2
+            return 1
+          }
+
+          mapfile -t runs < <(fetch_runs | sort -r)
+          if [[ ${#runs[@]} -eq 0 ]]; then
+            echo "No completed runs found (or API error). Exiting."
+            exit 0
+          fi
+          total_runs=${#runs[@]}
+          echo "Found $total_runs completed run(s); mode: $EVENT, force: ${FORCE:-false}"
+
+          age_cleanup=false
+          max_runs_cleanup=false
+          if [[ "$EVENT" == "schedule" ]]; then
+            age_cleanup=true
+          elif [[ "$EVENT" == "workflow_dispatch" ]]; then
+            age_cleanup=true
+            max_runs_cleanup=true
+          elif [[ "$EVENT" == "workflow_run" ]]; then
+            age_cleanup=true
+            max_runs_cleanup=true
+          fi
+
+          # Global threshold: if total runs exceed MAX_RUNS, aggressively clean
+          # every workflow down to just its latest run.
+          aggressive=false
+          if [[ "$max_runs_cleanup" == "true" && $total_runs -gt $MAX_RUNS ]]; then
+            aggressive=true
+            echo "Global threshold exceeded ($total_runs > $MAX_RUNS); aggressive cleanup enabled"
+          fi
 
           declare -A seen
           deleted=0
           for line in "${runs[@]}"; do
-            IFS=$'\t' read -r created id wf name <<< "$line"
+            IFS=$'\t' read -r created id wf name conclusion <<< "$line"
+
+            if [[ -z "$id" || -z "$wf" ]]; then
+              continue
+            fi
+
             seen[$wf]=$(( ${seen[$wf]:-0} + 1 ))
 
-            # the newest run of each workflow always survives
+            # The newest run of each workflow always survives
             if [[ ${seen[$wf]} -eq 1 ]]; then
               continue
             fi
@@ -73,9 +121,15 @@ jobs:
             delete=false
             if [[ "$FORCE" == "true" ]]; then
               delete=true
-            elif [[ ${seen[$wf]} -gt $MAX_RUNS ]]; then
+            fi
+
+            # Aggressive mode: global cap exceeded → delete all non-sentinel successful runs
+            if [[ "$delete" == "false" && "$aggressive" == "true" && "$conclusion" == "success" ]]; then
               delete=true
-            elif [[ "$EVENT" != "workflow_run" && "$created" < "$cutoff" ]]; then
+            fi
+
+            # Age-based cleanup (applies to both successful and failed runs)
+            if [[ "$delete" == "false" && "$age_cleanup" == "true" && "$created" < "$cutoff" ]]; then
               delete=true
             fi
 
