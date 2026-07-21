@@ -8,12 +8,108 @@
   },
   "rules": [
     {
+      "PK": "agent-api.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "agenthb.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "agentreporting.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "agentreportingstore.blob.core.windows.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
       "PK": "ammyy.com",
       "action": {
         "do": 0,
         "status": 1
       },
       "comment": "Block Ammyy Admin (LOLRMM)"
+    },
+    {
+      "PK": "anydesk.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block AnyDesk (LOLRMM)"
+    },
+    {
+      "PK": "app.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "appcdn.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "atera-agent-heartbeat.servicebus.windows.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "atera.pubnubapi.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "beanywhere.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "beyondtrustcloud.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block BeyondTrust (Bomgar) (LOLRMM)"
+    },
+    {
+      "PK": "bomgarcloud.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block BeyondTrust (Bomgar) (LOLRMM)"
     },
     {
       "PK": "chromoting-client.talkgadget.google.com",
@@ -40,6 +136,14 @@
       "comment": "Block Chrome Remote Desktop (LOLRMM)"
     },
     {
+      "PK": "cloudbackup.management",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
       "PK": "connectwise.com",
       "action": {
         "do": 0,
@@ -56,6 +160,30 @@
       "comment": "Block GoToAssist (LOLRMM)"
     },
     {
+      "PK": "downloads.zohocdn.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "downloads.zohodl.com.cn",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "electric.ai",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Electric AI (Kaseya) (LOLRMM)"
+    },
+    {
       "PK": "fastsupport.com",
       "action": {
         "do": 0,
@@ -70,6 +198,14 @@
         "status": 1
       },
       "comment": "Block NetSupport Manager (LOLRMM)"
+    },
+    {
+      "PK": "getalphacontrol.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
     },
     {
       "PK": "getgo.com",
@@ -112,12 +248,52 @@
       "comment": "Block GoToAssist (LOLRMM)"
     },
     {
+      "PK": "gotohttp.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block GotoHTTP (LOLRMM)"
+    },
+    {
+      "PK": "gotomypc.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block GoToMyPC (LOLRMM)"
+    },
+    {
       "PK": "helpme.net",
       "action": {
         "do": 0,
         "status": 1
       },
       "comment": "Block GoToAssist (LOLRMM)"
+    },
+    {
+      "PK": "kaseya.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Kaseya (VSA) (LOLRMM)"
+    },
+    {
+      "PK": "kaseya.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Kaseya (VSA) (LOLRMM)"
+    },
+    {
+      "PK": "logicnow.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
     },
     {
       "PK": "logmein-gateway.com",
@@ -160,6 +336,22 @@
       "comment": "Block LogMeIn (LOLRMM)"
     },
     {
+      "PK": "logmeinrescue.eu",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block LogMeIn rescue (LOLRMM)"
+    },
+    {
+      "PK": "n-able.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
       "PK": "netsupportmanager.com",
       "action": {
         "do": 0,
@@ -176,6 +368,46 @@
       "comment": "Block NoMachine (LOLRMM)"
     },
     {
+      "PK": "packagesstore.blob.core.windows.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "ps.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "pubsub.atera.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Atera (LOLRMM)"
+    },
+    {
+      "PK": "pulseway.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Pulseway (LOLRMM)"
+    },
+    {
+      "PK": "remote.management",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
       "PK": "remotedesktop-pa.googleapis.com",
       "action": {
         "do": 0,
@@ -184,12 +416,36 @@
       "comment": "Block Chrome Remote Desktop (LOLRMM)"
     },
     {
+      "PK": "remotedesktop.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block RemotePC (LOLRMM)"
+    },
+    {
       "PK": "remotedesktop.google.com",
       "action": {
         "do": 0,
         "status": 1
       },
       "comment": "Block Chrome Remote Desktop (LOLRMM)"
+    },
+    {
+      "PK": "remotepc.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block RemotePC (LOLRMM)"
+    },
+    {
+      "PK": "remoteutilities.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block RemoteUtilities (LOLRMM)"
     },
     {
       "PK": "rustdesk.com",
@@ -206,6 +462,78 @@
         "status": 1
       },
       "comment": "Block ScreenConnect (LOLRMM)"
+    },
+    {
+      "PK": "splashtop.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Splashtop (LOLRMM)"
+    },
+    {
+      "PK": "support.services.microsoft.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Quick Assist (LOLRMM)"
+    },
+    {
+      "PK": "swi-tc.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "system-monitor.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "systemmonitor.co.uk",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "systemmonitor.eu.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "systemmonitor.us",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "systemmonitor.us.cdn.cloudflare.net",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block N-Able Advanced Monitoring Agent (LOLRMM)"
+    },
+    {
+      "PK": "teamviewer.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block TeamViewer (LOLRMM)"
     },
     {
       "PK": "tightvnc.com",
@@ -230,6 +558,70 @@
         "status": 1
       },
       "comment": "Block UltraVNC (LOLRMM)"
+    },
+    {
+      "PK": "zoho.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zoho.com.au",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zoho.com.cn",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zoho.eu",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zoho.in",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zohoassist.com",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zohoassist.com.cn",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
+    },
+    {
+      "PK": "zohoassist.jp",
+      "action": {
+        "do": 0,
+        "status": 1
+      },
+      "comment": "Block Zoho Assist (LOLRMM)"
     }
   ]
 }
